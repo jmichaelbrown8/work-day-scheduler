@@ -1,3 +1,8 @@
 body {
     font-family: 'Cabin', Helvetica, sans-serif;
 }
+
+.time-label {
+    flex-basis: 6em;
+    text-align: right;
+}
