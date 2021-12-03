@@ -1,5 +1,6 @@
 const dateFormat = "YYYY-MM-DD";
 const mainEl = $('main');
+const currentDayEl = $('#current-day').children("span");
 
 var today = moment();
 var now = today;
@@ -10,12 +11,6 @@ const awayHours = [12]; // disable input for times like lunch hours
 /** Initializes the page based on today's date */
 function initialize() {
 
-    // if doesn't exist, get today's date
-    let todayString = today.format("LLLL")
-    
-    // display date on page
-    $('#current-day').children("span").text(todayString);
-
     // check localstorage for data to display
     // stored in objects with a date in YYYY-MM-DD format for the key
     var data = getLocalStorage();
@@ -24,8 +19,6 @@ function initialize() {
     renderPage(today, data);
 
     mainEl.on('click', 'button', handleClick);
-
-    mainEl.on('change', "input", handleChange);
 }
 
 /**
@@ -34,9 +27,15 @@ function initialize() {
  * @param {object} data - the data to initialize on the page
  */
 function renderPage(mmt, data) {
+    if (!mmt) {
+        mmt = today;
+    }
+
     if (!data) {
         data = {};
     }
+
+    updateDay(mmt);
 
     // loop through the hours
     for (var i = 0; i < workingHours.length; i++) {
@@ -81,6 +80,19 @@ function renderPage(mmt, data) {
     }
 }
 
+/**
+ * Displays the moment on the page.
+ * @param {moment} mmt 
+ */
+function updateDay(mmt, format) {
+
+    // get the user's local string representation of the given date
+    let todayString = mmt.format(format || "LLLL")
+    
+    // display date on page
+    currentDayEl.text(todayString);
+}
+
 /** Handles the save button clicks to save the input on the same line to localStorage */
 function handleClick(event) {
     // save the closest input to the localStorage in the given key
@@ -92,11 +104,6 @@ function handleClick(event) {
     let currentStorage = getLocalStorage(date) || {};
     currentStorage[id] = data;
     storeLocalStorage(date, currentStorage);
-}
-
-/** Handles to text change event to trigger validation that the input has changed */
-function handleChange(event) {
-    console.log(event);
 }
 
 /** Gets the object from localStorage for a given date (default: today) */
