@@ -19,6 +19,8 @@ function initialize() {
     renderPage(today, data);
 
     mainEl.on('click', 'button', handleClick);
+
+    mainEl.on('change', "input", handleChange);
 }
 
 /**
@@ -104,6 +106,11 @@ function handleClick(event) {
     let currentStorage = getLocalStorage(date) || {};
     currentStorage[id] = data;
     storeLocalStorage(date, currentStorage);
+}
+
+/** Handles to text change event to trigger validation that the input has changed */
+function handleChange(event) {
+    console.log(event);
 }
 
 /** Gets the object from localStorage for a given date (default: today) */
