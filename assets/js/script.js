@@ -16,11 +16,12 @@ function initialize() {
     var data = getLocalStorage();
     
     // write out data to page
-    renderPage(today, data);
+    renderPage(today, data); // live moment
+    // renderPage(moment("5", "H"), data); // testing moment
 
     mainEl.on('click', 'button', handleClick);
 
-    mainEl.on('change', "input", handleChange);
+    mainEl.on('input', 'input', handleInput);
 }
 
 /**
@@ -99,6 +100,7 @@ function updateDay(mmt, format) {
 function handleClick(event) {
     // save the closest input to the localStorage in the given key
     let date = today.format(dateFormat);
+    let buttonEl = $(event.target);
     let inputEl = $(event.target).siblings("input");
 
     let id = inputEl.attr('id');
@@ -106,11 +108,16 @@ function handleClick(event) {
     let currentStorage = getLocalStorage(date) || {};
     currentStorage[id] = data;
     storeLocalStorage(date, currentStorage);
+
+    // remove unsaved class from buttonEl
+    buttonEl.removeClass("unsaved");
 }
 
 /** Handles to text change event to trigger validation that the input has changed */
-function handleChange(event) {
-    console.log(event);
+function handleInput(event) {
+    let buttonEl = $(event.target).siblings("button");
+
+    buttonEl.addClass("unsaved");
 }
 
 /** Gets the object from localStorage for a given date (default: today) */
